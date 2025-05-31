@@ -1,8 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>YT VIEW BOOSTER</title>
   <style>
     :root {
@@ -10,9 +9,6 @@
       --black: #0a0a0a;
       --white: #ffffff;
       --neon: #ff004f;
-    }
-    * {
-      box-sizing: border-box;
     }
     body {
       margin: 0;
@@ -22,32 +18,36 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding-top: 40px;
+      justify-content: center;
+      min-height: 100vh;
+      overflow-x: hidden;
     }
     h1 {
-      font-size: 2.5rem;
+      font-size: 3rem;
+      text-align: center;
       color: var(--neon);
       text-shadow: 0 0 10px var(--neon), 0 0 20px var(--neon);
     }
     .subtitle {
-      font-size: 1rem;
-      color: #aaa;
-      margin-bottom: 20px;
+      font-size: 1.2rem;
+      margin-bottom: 10px;
+      color: #ccc;
+      text-align: center;
     }
-    .box, .admin-panel {
+    .login-box, .admin-box, .user-panel {
       background: #1a1a1a;
       border: 2px solid var(--neon);
       border-radius: 12px;
       padding: 20px;
       box-shadow: 0 0 20px var(--neon);
       width: 90%;
-      max-width: 400px;
+      max-width: 420px;
       text-align: center;
-      margin-bottom: 20px;
+      margin: 10px;
     }
     input, button {
-      width: 100%;
-      padding: 10px;
+      width: 90%;
+      padding: 12px;
       margin: 10px 0;
       border-radius: 8px;
       border: none;
@@ -57,7 +57,7 @@
       background: var(--neon);
       color: var(--white);
       cursor: pointer;
-      transition: background 0.3s;
+      transition: 0.3s;
     }
     button:hover {
       background: #e60042;
@@ -70,150 +70,164 @@
       50% { box-shadow: 0 0 20px var(--neon); }
       100% { box-shadow: 0 0 10px var(--neon); }
     }
-    iframe {
-      width: 300px;
-      height: 180px;
-      margin: 10px;
+    .buy-key {
+      margin-top: 10px;
     }
-    .video-grid {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
+    .buy-key a {
+      display: inline-block;
+      padding: 10px 15px;
+      border-radius: 8px;
+      background: linear-gradient(45deg, #ff004f, #ff003c);
+      color: white;
+      font-weight: bold;
+      text-decoration: none;
+      box-shadow: 0 0 10px #ff004f;
+      transition: transform 0.2s, box-shadow 0.2s;
     }
-    .settings-btn {
+    .buy-key a:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 20px #ff004f;
+    }
+    .yt-logo {
+      width: 20px;
+      vertical-align: middle;
+      margin-right: 5px;
+    }
+    #settingsBtn {
       position: fixed;
       top: 20px;
       right: 20px;
-      font-size: 1.2rem;
-      background: transparent;
-      border: 2px solid var(--neon);
+      background: none;
+      border: none;
+      font-size: 24px;
       color: var(--neon);
-      padding: 6px 10px;
-      border-radius: 50%;
       cursor: pointer;
     }
-    .buy-key a {
-      color: var(--white);
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
+    .video-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 10px;
+      width: 90%;
+      margin-top: 20px;
     }
-    .buy-key img {
-      width: 20px;
-      margin-right: 5px;
+    iframe {
+      width: 100%;
+      height: 200px;
+      border: none;
     }
   </style>
 </head>
 <body>
-  <h1>YT VIEW BOOSTER</h1>
-  <div class="subtitle">MADE BY DARKSIDE</div>
-  <div id="login-box" class="box">
+  <button id="settingsBtn" title="Admin Panel" onclick="openAdminPanel()">&#9881;</button>  <h1>YT VIEW BOOSTER</h1>
+  <div class="subtitle">MADE BY DARKSIDE</div>  <div id="login-section" class="login-box">
     <input id="username" placeholder="Enter Username" />
     <input id="key" placeholder="Enter Key" />
     <button onclick="login()">Login</button>
     <div class="buy-key">
       <a href="https://t.me/Killingchildrenforfun" target="_blank">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" />BUY KEY
+        <img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" class="yt-logo" />
+        BUY KEY NOW
       </a>
     </div>
-  </div>
-  <button class="settings-btn" onclick="openAdmin()">⚙️</button>
-
-  <div id="admin-panel" class="admin-panel" style="display:none">
-    <h3>Admin Panel</h3>
-    <input id="newKey" placeholder="Add New Key" />
-    <input id="expiry" placeholder="Expiry Date (YYYY-MM-DD)" />
-    <input id="maxDevices" placeholder="Max Devices" type="number" />
-    <button onclick="addKey()">Add Key</button>
-  </div>
-
-  <div id="user-panel"></div>
-
-  <script>
+  </div>  <div id="admin-panel" style="display:none;" class="admin-box">
+    <h2>Admin Panel</h2>
+    <input id="newKey" placeholder="New Key Name" />
+    <input id="newUser" placeholder="Username for Key" />
+    <input id="newLimit" type="number" placeholder="Max Devices" />
+    <input id="newExpiry" type="number" placeholder="Expiry (Days)" />
+    <button onclick="generateKey()">Generate Key</button>
+    <p style="font-size: 0.8rem; color: #aaa">All keys saved in browser storage</p>
+  </div>  <div id="user-panel" style="display:none;" class="user-panel">
+    <h2 id="welcome-msg"></h2>
+    <input id="video-link" placeholder="Paste YouTube Link" oninput="autoplayVideo()"/>
+    <input id="view-count" type="number" placeholder="VIEWS AMOUNT [1-1000]" min="1" max="1000" />
+    <button onclick="startBoost()">Start</button>
+    <div id="videos" class="video-grid"></div>
+  </div>  <script>
     const adminKey = 'RUDRAPAWAR';
-    const validKeys = {
-      'DARKSIDE': { user: 'DARKSIDE', devices: 0, maxDevices: 5, expiry: '2099-12-31' }
-    };
+    let keys = JSON.parse(localStorage.getItem('keys') || '{}');
 
     function login() {
-      const u = document.getElementById('username').value.trim();
-      const k = document.getElementById('key').value.trim();
-
-      if (k === adminKey) {
-        alert('Welcome Admin!');
-        document.getElementById('admin-panel').style.display = 'block';
-        document.getElementById('login-box').style.display = 'none';
-      } else if (validKeys[k] && validKeys[k].user === u) {
-        if (validKeys[k].devices >= validKeys[k].maxDevices) {
-          alert('Device limit exceeded.');
-        } else {
-          validKeys[k].devices++;
-          document.getElementById('login-box').style.display = 'none';
-          loadUserPanel(u, validKeys[k].expiry);
-        }
-      } else {
-        alert('Invalid credentials.');
-      }
-    }
-
-    function loadUserPanel(user, expiry) {
-      document.getElementById('user-panel').innerHTML = `
-        <div class="box">
-          <h3>Welcome, ${user}</h3>
-          <input id="ytlink" placeholder="Paste YouTube Link (any type)" oninput="autoBoost()"/>
-          <input id="views" type="number" min="1" max="1000" placeholder="VIEWS AMOUNT [MAX 1000]"/>
-          <div class="video-grid" id="videos"></div>
-          <p>Your key is valid till ${expiry}</p>
-        </div>`;
-    }
-
-    function autoBoost() {
-      const url = document.getElementById('ytlink').value.trim();
-      const count = parseInt(document.getElementById('views').value) || 1;
-      const container = document.getElementById('videos');
-      container.innerHTML = '';
-      if (!url.includes('youtube.com') && !url.includes('youtu.be')) return;
-
-      let embed = url;
-      if (url.includes('watch?v=')) {
-        const id = url.split('watch?v=')[1].split('&')[0];
-        embed = `https://www.youtube.com/embed/${id}?autoplay=1&mute=1`;
-      } else if (url.includes('shorts/')) {
-        const id = url.split('shorts/')[1].split('?')[0];
-        embed = `https://www.youtube.com/embed/${id}?autoplay=1&mute=1`;
-      } else if (url.includes('youtu.be/')) {
-        const id = url.split('youtu.be/')[1].split('?')[0];
-        embed = `https://www.youtube.com/embed/${id}?autoplay=1&mute=1`;
-      }
-
-      for (let i = 0; i < Math.min(count, 1000); i++) {
-        const frame = document.createElement('iframe');
-        frame.src = embed;
-        frame.allow = 'autoplay';
-        container.appendChild(frame);
-      }
-    }
-
-    function openAdmin() {
-      const key = prompt('Enter Admin Key');
+      const user = document.getElementById('username').value.trim();
+      const key = document.getElementById('key').value.trim();
       if (key === adminKey) {
+        document.getElementById('login-section').style.display = 'none';
         document.getElementById('admin-panel').style.display = 'block';
+        return;
+      }
+      if (keys[key] && keys[key].user === user) {
+        const { expiry, devices = 0, maxDevices } = keys[key];
+        const today = new Date();
+        const expiryDate = new Date(expiry);
+        if (today > expiryDate) return alert('Key expired');
+        if (devices >= maxDevices) return alert('Device limit exceeded');
+        keys[key].devices = devices + 1;
+        localStorage.setItem('keys', JSON.stringify(keys));
+        document.getElementById('login-section').style.display = 'none';
+        document.getElementById('user-panel').style.display = 'block';
+        document.getElementById('welcome-msg').innerText = `Welcome, ${user}`;
       } else {
-        alert('Wrong admin key!');
+        alert('Invalid Username or Key');
       }
     }
 
-    function addKey() {
+    function generateKey() {
       const k = document.getElementById('newKey').value.trim();
-      const e = document.getElementById('expiry').value.trim();
-      const d = parseInt(document.getElementById('maxDevices').value);
-      if (k && e && d) {
-        validKeys[k] = { user: k, devices: 0, maxDevices: d, expiry: e };
-        alert('Key added!');
+      const u = document.getElementById('newUser').value.trim();
+      const d = parseInt(document.getElementById('newLimit').value);
+      const e = parseInt(document.getElementById('newExpiry').value);
+      if (!k || !u || isNaN(d) || isNaN(e)) return alert('Fill all fields');
+      const expiryDate = new Date();
+      expiryDate.setDate(expiryDate.getDate() + e);
+      keys[k] = { user: u, devices: 0, maxDevices: d, expiry: expiryDate.toISOString() };
+      localStorage.setItem('keys', JSON.stringify(keys));
+      alert('Key added!');
+    }
+
+    function openAdminPanel() {
+      const pass = prompt('Enter Admin Key');
+      if (pass === adminKey) {
+        document.getElementById('admin-panel').style.display = 'block';
+        document.getElementById('login-section').style.display = 'none';
       } else {
-        alert('Fill all fields');
+        alert('Wrong admin key');
       }
     }
-  </script>
-</body>
+
+    function autoplayVideo() {
+      const link = document.getElementById('video-link').value;
+      const ytLink = transformYT(link);
+      if (ytLink) {
+        document.getElementById('videos').innerHTML = `<iframe src="${ytLink}?autoplay=1&mute=1"></iframe>`;
+      }
+    }
+
+    function transformYT(url) {
+      if (!url.includes('youtube.com') && !url.includes('youtu.be')) return null;
+      if (url.includes('/shorts/')) {
+        return url.replace('/shorts/', '/embed/');
+      } else if (url.includes('watch?v=')) {
+        const vid = url.split('watch?v=')[1].split('&')[0];
+        return `https://www.youtube.com/embed/${vid}`;
+      } else if (url.includes('youtu.be/')) {
+        const vid = url.split('youtu.be/')[1].split('?')[0];
+        return `https://www.youtube.com/embed/${vid}`;
+      } else if (url.includes('/embed/')) {
+        return url;
+      }
+      return null;
+    }
+
+    function startBoost() {
+      const views = parseInt(document.getElementById('view-count').value);
+      const link = document.getElementById('video-link').value;
+      const embed = transformYT(link);
+      if (!embed || isNaN(views) || views < 1 || views > 1000) return alert('Enter valid inputs');
+      let html = '';
+      for (let i = 0; i < views; i++) {
+        html += `<iframe src="${embed}?autoplay=1&mute=1"></iframe>`;
+      }
+      document.getElementById('videos').innerHTML = html;
+    }
+  </script></body>
 </html>
