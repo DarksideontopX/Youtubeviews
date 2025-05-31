@@ -1,0 +1,190 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>YT VIEW BOOSTER</title>
+  <style>
+    :root {
+      --red: #ff003c;
+      --black: #0a0a0a;
+      --white: #ffffff;
+      --neon: #ff004f;
+    }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: var(--black);
+      color: var(--white);
+      overflow-x: hidden;
+    }
+    h1 {
+      font-size: 2.5rem;
+      text-align: center;
+      color: var(--neon);
+      text-shadow: 0 0 10px var(--neon);
+      margin-top: 20px;
+    }
+    .subtitle {
+      font-size: 1rem;
+      color: #ccc;
+      text-align: center;
+      margin-bottom: 10px;
+    }
+    .login-box {
+      background: #1a1a1a;
+      border: 2px solid var(--neon);
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 0 20px var(--neon);
+      width: 90%;
+      max-width: 400px;
+      margin: 30px auto;
+      text-align: center;
+    }
+    input, button {
+      width: 90%;
+      padding: 12px;
+      margin: 10px 0;
+      border-radius: 8px;
+      border: none;
+      font-size: 1rem;
+    }
+    button {
+      background: var(--neon);
+      color: var(--white);
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    button:hover {
+      background: #e60042;
+    }
+    .admin-icon {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--neon);
+    }
+    .video-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      padding: 10px;
+    }
+    iframe {
+      width: 300px;
+      height: 170px;
+      border: none;
+    }
+    .buy-key {
+      margin-top: 10px;
+    }
+    .buy-key a {
+      color: var(--neon);
+      text-decoration: none;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="admin-icon" onclick="showAdminLogin()">
+    ⚙
+  </div>
+  <h1>YT VIEW BOOSTER</h1>
+  <div class="subtitle">MADE BY DARKSIDE</div>  <div id="main-content" class="login-box">
+    <input id="username" placeholder="Enter Username" />
+    <input id="key" placeholder="Enter Key" />
+    <button onclick="login()">Login</button>
+    <div class="buy-key">
+      <a href="https://t.me/Killingchildrenforfun" target="_blank">
+        🔗 BUY KEY
+      </a>
+    </div>
+  </div>  <div id="videos" class="video-grid"></div>  <script>
+    const validKeys = {
+      'DARKSIDE': { user: 'DARKSIDE', devices: 0, maxDevices: 3, expiry: '2099-12-31' }
+    };
+    let adminKey = 'RUDRAPAWAR';
+
+    function login() {
+      const user = document.getElementById('username').value.trim();
+      const key = document.getElementById('key').value.trim();
+      if (validKeys[key] && validKeys[key].user === user) {
+        if (validKeys[key].devices >= validKeys[key].maxDevices) {
+          alert('Device limit exceeded.');
+        } else {
+          validKeys[key].devices++;
+          document.getElementById('main-content').innerHTML = `
+            <h2>Welcome, ${user}!</h2>
+            <input id="video-link" placeholder="Paste YouTube Link" oninput="autoBoost()"/>
+            <input id="view-count" type="number" min="1" max="1000" placeholder="Views Amount [1-1000]" />
+            <button onclick="boost()">BOOST</button>
+            <p>Your key is valid until ${validKeys[key].expiry}</p>
+          `;
+        }
+      } else {
+        alert('Invalid credentials.');
+      }
+    }
+
+    function autoBoost() {
+      const url = document.getElementById('video-link').value.trim();
+      if (url.includes('youtube.com')) {
+        boost();
+      }
+    }
+
+    function boost() {
+      const urlInput = document.getElementById('video-link').value.trim();
+      const viewCount = parseInt(document.getElementById('view-count').value) || 1;
+      const videoUrl = urlInput.includes('shorts') ? urlInput.replace('/shorts/', '/watch?v=') : urlInput;
+      const videoIdMatch = videoUrl.match(/[?&]v=([\w-]+)/);
+      if (!videoIdMatch) return alert('Invalid YouTube link.');
+      const videoId = videoIdMatch[1];
+      const container = document.getElementById('videos');
+      container.innerHTML = '';
+      for (let i = 0; i < Math.min(viewCount, 1000); i++) {
+        const iframe = document.createElement('iframe');
+        iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&loop=1&playlist=${videoId}`;
+        container.appendChild(iframe);
+      }
+    }
+
+    function showAdminLogin() {
+      const input = prompt('Enter Admin Key:');
+      if (input === adminKey) {
+        document.getElementById('main-content').innerHTML = `
+          <h2>Admin Panel</h2>
+          <input id="new-user" placeholder="Username"/>
+          <input id="new-key" placeholder="Key"/>
+          <input id="max-devices" type="number" placeholder="Max Devices"/>
+          <input id="expiry" placeholder="Expiry Date (YYYY-MM-DD)"/>
+          <button onclick="addKey()">Add Key</button>
+          <input id="new-admin" placeholder="New Admin Key"/>
+          <button onclick="changeAdminKey()">Change Admin Key</button>
+        `;
+      } else {
+        alert('Invalid admin key.');
+      }
+    }
+
+    function addKey() {
+      const user = document.getElementById('new-user').value.trim();
+      const key = document.getElementById('new-key').value.trim();
+      const max = parseInt(document.getElementById('max-devices').value);
+      const expiry = document.getElementById('expiry').value;
+      if (!user || !key || !max || !expiry) return alert('Fill all fields');
+      validKeys[key] = { user, devices: 0, maxDevices: max, expiry };
+      alert(`Key added for ${user}`);
+    }
+
+    function changeAdminKey() {
+      const newKey = document.getElementById('new-admin').value.trim();
+      if (!newKey) return alert('Enter new admin key.');
+      adminKey = newKey;
+      alert('Admin key updated.');
+    }
+  </script></body>
+</html>
